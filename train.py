@@ -9,28 +9,23 @@ import scipy.io as scio
 import os
 
 
-#parameter
 BATCH_SIZE=500
 LR = 0.0001
 
-#Download Data
 feature = h5py.File('train_data_tmp.mat')
 F_data = feature['F_data_t'][:]
 H_data = feature['H_data_t'][:]
 F_data = np.transpose(F_data)
 H_data = np.transpose(H_data)
 
-#transform to tensor
 F_data_tensor = torch.from_numpy(F_data)
 F_data_tensor = F_data_tensor.to(torch.float32)
 H_data_tensor = torch.from_numpy(H_data)
 H_data_tensor = H_data_tensor.to(torch.float32)
 
-#Normalized
 F_data_tensor=(F_data_tensor+0.2500)*2
 H_data_tensor=(H_data_tensor+3.5000)/7
 
-#Training Set，Validation Set
 train_data_x =H_data_tensor[:6000]
 train_data_y =F_data_tensor[:6000]
 validation_data_x =H_data_tensor[6000:6800]
@@ -39,13 +34,11 @@ validation_data_y =F_data_tensor[6000:6800]
 torch_dataset = Data.TensorDataset(train_data_x,train_data_y)
 loader = Data.DataLoader(dataset=torch_dataset,batch_size=BATCH_SIZE,shuffle=True)
 
-#network, optimizer, loss function
 net = Net(144,4*144,2*144,4*144,144)
 print(net)
 optimizer = torch.optim.Adam(net.parameters(),lr = LR)
 loss_func = torch.nn.MSELoss()
 
-#train
 loss_his=[]
 acc_his=[]
 
@@ -61,7 +54,6 @@ for epoch in range(1000):
         loss.backward()
         optimizer.step()
 
-    #display
     if epoch%10 ==0:
         print('epoch: %d' % epoch)
         print('Loss = %.4f' % loss.data)
@@ -80,17 +72,14 @@ for epoch in range(1000):
 
 
 
-
-#display result
 plt.plot(loss_his, c='blue',  linestyle='-', label='Loss')
 plt.plot(acc_his, c='red',  linestyle='-', label='Accuracy')
 plt.legend(loc=1)
 plt.show()
 
-#save
 torch.save(net,'mat.pkl')
-os.rename('mat.pkl','mat'+str(num)+'.pkl')
-#print(num)
+
+
 
 
 
