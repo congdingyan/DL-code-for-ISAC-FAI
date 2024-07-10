@@ -3,7 +3,6 @@ import torch.nn.functional as F
 import torch
 
 
-#model
 class Net(nn.Module):
     def __init__(self,n_input,n_hidden1,n_hidden2,n_hidden3,n_output):
         super(Net,self).__init__()
@@ -19,7 +18,6 @@ class Net(nn.Module):
         out = self.hidden3(out)
         out = F.relu(out)
         out =self.predict(out)
-        #out = F.relu(out)
         return out
 
 if __name__ == '__main__':
